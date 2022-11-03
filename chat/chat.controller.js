@@ -9,13 +9,10 @@ class ChatsController {
   //새로운 채팅룸을 만든다. 정확히는 채팅하기 버튼을 누른 경우에 대한 것
   startChat = async (req, res, next) => {
     try {
-      //################################임시 데이터 영역 (로그인 기능이 구현되면 이부분을 수정)
       const { userId } = res.locals.user; //채팅룸을 만들 사람의 id를 가져오고
       console.log(`userId = ${userId}`);
       const { postId } = req.body;
-      // const userId = 3
-      // const postId = 1
-      //################################임시 데이터 영역 (로그인 기능이 구현되면 이부분을 수정)
+
       const dup = await ChatList.findAll({ where: { userId, postId } });
       let CLID = 0;
 
@@ -71,12 +68,9 @@ class ChatsController {
   enteringRoom = async (req, res, next) => {
     //바디에선 입장하고자한 채팅룸 아이디를 건네준다. 그리고 그곳에서 postId를 가져오고
     try {
-      //################################임시 데이터 영역 (로그인 기능이 구현되면 이부분을 수정)
       const { userId } = res.locals.user; //유저 아이디를 가져오고
-      //   const userId = 5;
-      //################################임시 데이터 영역 (로그인 기능이 구현되면 이부분을 수정)
       const { chatListId } = req.params; //파람스에서 쳇방 아이디를 가져오고
-      const myInfo = await Users.findAll({ where: { userId } }); //로그인 한 사람(채팅시작 버튼을 누른 사람)의 ID
+
       const roomInfo = await ChatList.findAll({ where: { chatListId } }); //채팅방 정보를 가져옴
       const post = roomInfo[0].dataValues.postId;
       const postInfo = await SalePosts.findAll({ where: { postId: post } }); //게시글의 데이터
@@ -132,9 +126,8 @@ class ChatsController {
         res.status(400).send({ errorMessage: '채팅 내용 입력' }); //채팅 내용이 없다면 채팅을 입력해달라는 메시지 출력
         return;
       }
-      //################################################################
+
       const { userId } = res.locals.user; //로그인중인 유저의 정보를 가져온다.
-      //################################################################
 
       const chatsRoom = await this.chatsService.findRoom(chatListId); //채팅을 추가할 채팅리스트를 찾는다.
       const cLId = chatsRoom.chatListId;
