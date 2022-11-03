@@ -80,13 +80,11 @@ class PostController {
       const post = await this.postService.createPost(req, res);
 
       console.log(post);
-      res
-        .status(200)
-        .send({
-          ok: true,
-          message: '거래글이 생성되었습니다.',
-          postId: post.postId,
-        });
+      res.status(200).send({
+        ok: true,
+        message: '거래글이 생성되었습니다.',
+        postId: post.postId,
+      });
     } catch (err) {
       next(err);
     }
