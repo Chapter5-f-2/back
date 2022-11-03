@@ -69,6 +69,14 @@ class MypageRepository {
     );
   };
 
+  // locationId 변경
+  changeLocationId = async (userId, locationId) => {
+    await Users.update(
+      { locationId, updatedAt: Date.now() },
+      { where: { userId } }
+    );
+  };
+
   // getUserDetail 내 정보 조회
   getUserDetail = async (userId) => {
     return await Users.findOne({
@@ -87,6 +95,11 @@ class MypageRepository {
   // postId로 판매글 조회
   getSaleslistByPostId = async (postId) => {
     return await SalePosts.findOne({ where: { postId } });
+  };
+
+  // 아이디 비밀번호로 유저 정보 조회
+  isUser = async (userId) => {
+    return await Users.findOne({ where: { userId } });
   };
 }
 

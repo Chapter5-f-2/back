@@ -7,8 +7,7 @@ class PostService {
   // 위치별 거래글 조회
   findPostByLoc = async (locationId) => {
     const locationPost = await this.postRepository.findPostByLoc(locationId);
-    if (locationPost.length < 1)
-      throw new Error('해당 지역에는 거래글이 없습니다.');
+    if (locationPost.length < 1) return [];
 
     let result = [];
     locationPost.forEach((post) => {
@@ -23,11 +22,11 @@ class PostService {
   // 카테고리별 거래글 조회
   findPostByCat = async (categoryId) => {
     const categoryPost = await this.postRepository.findPostByCat(categoryId);
-    if (!categoryPost) throw new error('해당 카테고리에는 거래글이 없습니다.');
+    if (!categoryPost) return [];
 
     let result = [];
     categoryPost.forEach((post) => {
-      result.push(post);;
+      result.push(post);
     });
 
     return result;
@@ -36,11 +35,11 @@ class PostService {
   // 거래글 제목 검색
   findPostByTitle = async (title) => {
     const titlePost = await this.postRepository.findPostByTitle(title);
-    if (!titlePost) throw new error('해당하는 타이틀의 거래글이 없습니다.');
+    if (!titlePost) return [];
 
     let result = [];
     titlePost.forEach((post) => {
-      result.push(post);;
+      result.push(post);
     });
 
     return result;
@@ -51,18 +50,16 @@ class PostService {
     const findOnePost = await this.postRepository.findOnePost(postId);
     if (!findOnePost) throw new error('존재하지 않는 거래글입니다. servDetail');
     console.log('serv findOnePost', findOnePost);
-    
-    return isWish, findOnePost;
+
+    return findOnePost;
   };
 
-// 찜 여부 확인
-isWish = async(postId) => {
-  let isWish = await this.postRepository.isWish(postId);
+  // 찜 여부 확인
+  isWish = async (postId) => {
+    let isWish = await this.postRepository.isWish(postId);
 
-  isWish ? (isWish = true) : (isWish = false);
-  
-  return isWish;
-}
+    return isWish;
+  };
 
   // 유저의 다른 글 보기
   findPostByUser = async (userId, postId) => {
@@ -103,7 +100,7 @@ isWish = async(postId) => {
       price,
     };
 
-    await this.postRepository.createPost(post);
+    return await this.postRepository.createPost(post);
   };
 
   //거래글 수정
@@ -155,8 +152,11 @@ isWish = async(postId) => {
     if (!findOnePost) throw new error('존재하지 않는 게시글입니다.');
     if (findOnePost.userId !== userId) throw new error('수정 권한이 없습니다.');
 
-    if ( status === 2) { await this.postRepository.createTransaction(postId, userId)}
-    else { await this.postRepository.updateStatus(post); }
+    if (status === 2) {
+      await this.postRepository.createTransaction(postId, userId);
+    } else {
+      await this.postRepository.updateStatus(post);
+    }
   };
 
   // 거래글 삭제
@@ -179,7 +179,6 @@ isWish = async(postId) => {
   //찜 update(추가삭제 동시)
   updateWish = async (userId, postId) => {
     const findWish = await this.postRepository.findWish(userId, postId);
-
 
     if (!findWish) {
       await this.postRepository.createWish(userId, postId);

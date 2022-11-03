@@ -31,7 +31,7 @@ class PostController {
     }
   };
 
-  // 제목검색 거래글 조회 검색기능 왜 잘될까?
+  // 제목검색 거래글 조회 검색기능
   findPostByTitle = async (req, res, next) => {
     try {
       let { keyword } = req.query;
@@ -66,9 +66,9 @@ class PostController {
       );
 
       // res.status(200).send({ data: findOnePost, otherPosts: otherPosts });
-      res
-        .status(200)
-        .send({ data: { post: findOnePost, isWish: isWish, otherPosts: otherPosts } });
+      res.status(200).send({
+        data: { post: findOnePost, isWish: isWish, otherPosts: otherPosts },
+      });
     } catch (err) {
       next(err);
     }
@@ -77,9 +77,16 @@ class PostController {
   // 거래글 생성
   createPost = async (req, res, next) => {
     try {
-      await this.postService.createPost(req, res);
+      const post = await this.postService.createPost(req, res);
 
-      res.status(200).send({ ok: 'true', message: '거래글이 생성되었습니다.' });
+      console.log(post);
+      res
+        .status(200)
+        .send({
+          ok: true,
+          message: '거래글이 생성되었습니다.',
+          postId: post.postId,
+        });
     } catch (err) {
       next(err);
     }
@@ -90,7 +97,7 @@ class PostController {
     try {
       await this.postService.updatePost(req, res);
 
-      res.status(200).send({ ok: 'true', message: '거래글이 수정되었습니다.' });
+      res.status(200).send({ ok: true, message: '거래글이 수정되었습니다.' });
     } catch (err) {
       next(err);
     }
@@ -101,7 +108,7 @@ class PostController {
     try {
       await this.postService.updateStatus(req, res);
 
-      res.status(200).send({ ok: 'true', message: '상태가 변경되었습니다.' });
+      res.status(200).send({ ok: true, message: '상태가 변경되었습니다.' });
     } catch (err) {
       next(err);
     }
@@ -112,7 +119,7 @@ class PostController {
     try {
       await this.postService.deletePost(req, res);
 
-      res.status(200).send({ ok: 'true', message: '거래글이 삭제되었습니다.' });
+      res.status(200).send({ ok: true, message: '거래글이 삭제되었습니다.' });
     } catch (err) {
       next(err);
     }
